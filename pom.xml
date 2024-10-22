@@ -11,5 +11,14 @@
         <maven.compiler.target>22</maven.compiler.target>
         <exec.mainClass>com.mycompany.sistemainventario.SistemaInventario</exec.mainClass>
     </properties>
+    <dependencies>
+        
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.1.0</version>
+        </dependency>
+
+    </dependencies>
     <name>SistemaGestion</name>
 </project>
