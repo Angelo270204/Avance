@@ -48,6 +48,11 @@ public class LoginFrm extends javax.swing.JFrame {
 
         btnRegistrarse.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnRegistrarse.setText("Registrarse");
+        btnRegistrarse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarseActionPerformed(evt);
+            }
+        });
 
         jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\angel\\Downloads\\logoIntegrador.jpeg")); // NOI18N
 
@@ -114,8 +119,17 @@ public class LoginFrm extends javax.swing.JFrame {
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        // TODO add your handling code here:
+       
+        //Redirigir a la ventana principal
+        MainFRM principal = new MainFRM();
+       principal.setVisible(true);
+       this.setVisible(false);
     }//GEN-LAST:event_btnIngresarActionPerformed
+
+    private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
+       RegistroFrm registroFrm=new RegistroFrm();
+       registroFrm.setVisible(true);
+    }//GEN-LAST:event_btnRegistrarseActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
