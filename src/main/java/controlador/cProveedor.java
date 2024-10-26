@@ -4,6 +4,7 @@ import modelo.Proveedor;
 import dao.ProveedorDao;
 
 public class cProveedor {
+    /*
     private final ProveedorDao proveedorDao;
 
     public cProveedor() {
@@ -25,4 +26,5 @@ public class cProveedor {
     public boolean eliminarProveedor(int id) {
         return proveedorDao.eliminar(id);
     }
+*/
 }
