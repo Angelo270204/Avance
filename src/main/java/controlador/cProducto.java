@@ -2,16 +2,17 @@ package controlador;
 
 import modelo.Producto;
 import dao.ProductoDao;
+import java.sql.Connection;
 
 public class cProducto {
     private final ProductoDao productoDao;
 
-    public cProducto() {
-        this.productoDao = new ProductoDao();
+    public cProducto(Connection connection) {
+        this.productoDao = new ProductoDao(connection);
     }
 
     public boolean registrarProducto(Producto producto) {
-        return productoDao.crear(producto);
+        return productoDao.addProducto(producto);
     }
 
     public Producto obtenerProducto(int id) {
