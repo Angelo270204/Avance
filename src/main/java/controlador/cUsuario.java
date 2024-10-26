@@ -2,17 +2,23 @@ package controlador;
 
 import modelo.Usuario;
 import dao.UsuarioDao;
+import java.sql.Connection;
 
 public class cUsuario {
-    /*
+    
     private final UsuarioDao usuarioDao;
 
-    public cUsuario() {
-        this.usuarioDao = new UsuarioDao();
+    public cUsuario(Connection connection) { // Recibe la conexión como parámetro
+        this.usuarioDao = new UsuarioDao(connection);
     }
 
     public boolean registrarUsuario(Usuario usuario) {
-        return usuarioDao.crear(usuario);
+        try {
+            usuarioDao.addUsuario(usuario);
+            return true;
+        } catch (Exception e) { // Manejo de excepciones
+            return false;
+        }
     }
 
     public Usuario obtenerUsuario(int id) {
@@ -25,5 +31,5 @@ public class cUsuario {
 
     public boolean eliminarUsuario(int id) {
         return usuarioDao.eliminar(id);
-    }*/
+    }
 }
