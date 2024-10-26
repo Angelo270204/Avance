@@ -11,12 +11,13 @@ public class ProveedorDao {
         this.dataSource = new DataSource();
     }
 
+    /*
     public boolean crear(Proveedor proveedor) {
         String sql = "INSERT INTO proveedores (nombre, contacto, telefono) VALUES (?, ?, ?)";
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = dataSource.obtenerConexion();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, proveedor.getNombre());
-            pstmt.setString(2, proveedor.getContacto());
+            pstmt.setString(2, proveedor.getc());
             pstmt.setString(3, proveedor.getTelefono());
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -67,4 +68,5 @@ public class ProveedorDao {
             return false;
         }
     }
+*/
 }

@@ -4,6 +4,7 @@ import modelo.Usuario;
 import dao.UsuarioDao;
 
 public class cUsuario {
+    /*
     private final UsuarioDao usuarioDao;
 
     public cUsuario() {
@@ -24,5 +25,5 @@ public class cUsuario {
 
     public boolean eliminarUsuario(int id) {
         return usuarioDao.eliminar(id);
-    }
+    }*/
 }
