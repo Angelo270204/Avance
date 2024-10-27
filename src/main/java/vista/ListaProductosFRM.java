@@ -1,11 +1,29 @@
 
 package vista;
 
+import controlador.cProducto;
+
+import java.sql.Connection;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import modelo.Producto;
+import util.DataSource;
+
+
 public class ListaProductosFRM extends javax.swing.JFrame {
 
+    // Obtener la conexión a la base de datos
+    Connection conexion = DataSource.obtenerConexion();
+    
+    cProducto controlador=new cProducto(conexion);
+    
+    DefaultTableModel modelo;
+    
     public ListaProductosFRM() {
         initComponents();
         setLocationRelativeTo(null);
+        modelo=(DefaultTableModel)tblProductos.getModel();
+        llenarTabla();
     }
 
     @SuppressWarnings("unchecked")
@@ -43,7 +61,7 @@ public class ListaProductosFRM extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Id", "Nombre", "Descripción", "Stock", "Precio", "Categoría"
+                "Id", "Nombre", "Categoria", "Descripcion", "Stock", "Precio"
             }
         ));
         jScrollPane2.setViewportView(tblProductos);
@@ -51,15 +69,18 @@ public class ListaProductosFRM extends javax.swing.JFrame {
             tblProductos.getColumnModel().getColumn(0).setMinWidth(50);
             tblProductos.getColumnModel().getColumn(0).setPreferredWidth(50);
             tblProductos.getColumnModel().getColumn(0).setMaxWidth(50);
-            tblProductos.getColumnModel().getColumn(3).setMinWidth(100);
-            tblProductos.getColumnModel().getColumn(3).setPreferredWidth(100);
-            tblProductos.getColumnModel().getColumn(3).setMaxWidth(100);
+            tblProductos.getColumnModel().getColumn(2).setMinWidth(120);
+            tblProductos.getColumnModel().getColumn(2).setPreferredWidth(120);
+            tblProductos.getColumnModel().getColumn(2).setMaxWidth(120);
+            tblProductos.getColumnModel().getColumn(3).setMinWidth(230);
+            tblProductos.getColumnModel().getColumn(3).setPreferredWidth(230);
+            tblProductos.getColumnModel().getColumn(3).setMaxWidth(230);
             tblProductos.getColumnModel().getColumn(4).setMinWidth(100);
             tblProductos.getColumnModel().getColumn(4).setPreferredWidth(100);
             tblProductos.getColumnModel().getColumn(4).setMaxWidth(100);
-            tblProductos.getColumnModel().getColumn(5).setMinWidth(150);
-            tblProductos.getColumnModel().getColumn(5).setPreferredWidth(150);
-            tblProductos.getColumnModel().getColumn(5).setMaxWidth(150);
+            tblProductos.getColumnModel().getColumn(5).setMinWidth(100);
+            tblProductos.getColumnModel().getColumn(5).setPreferredWidth(100);
+            tblProductos.getColumnModel().getColumn(5).setMaxWidth(100);
         }
 
         btnEditar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
@@ -140,7 +161,7 @@ public class ListaProductosFRM extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        
+
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
@@ -148,6 +169,27 @@ public class ListaProductosFRM extends javax.swing.JFrame {
         agrProducto.setVisible(true);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
+   public  void llenarTabla() {
+    // Obtener la lista de productos del controlador
+    List<Producto> productos = controlador.obtenerProductos();
+
+    // Limpiar las filas existentes en la tabla
+    modelo.setRowCount(0);
+
+    // Agregar los productos al modelo de la tabla
+    for (Producto p : productos) {
+        modelo.addRow(new Object[]{
+            p.getIdProducto(),
+            p.getNombre(),
+            p.getCategoria().getNombreCategoria(), // Mostrar nombre de la categoría
+            p.getDescripcion(),
+            p.getCantidadStock(),
+            p.getPrecio()
+        });
+    }
+}
+        
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

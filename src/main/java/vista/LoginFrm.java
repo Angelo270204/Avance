@@ -1,7 +1,12 @@
-
 package vista;
 
+import controlador.cUsuario;
+import javax.swing.JOptionPane;
+import modelo.Usuario;
+
 public class LoginFrm extends javax.swing.JFrame {
+
+    private cUsuario controlador;
 
     public LoginFrm() {
         initComponents();
@@ -118,17 +123,28 @@ public class LoginFrm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
+    public void setControlador(cUsuario controlador) {
+        this.controlador = controlador;
+    }
+    
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-       
-        //Redirigir a la ventana principal
-        MainFRM principal = new MainFRM();
-       principal.setVisible(true);
-       this.setVisible(false);
+        Usuario user = controlador.validarCredenciales(txtUsuario.getText(),txtContraseña.getText() );
+
+        // Comprueba si se obtuvo un usuario válido
+    if (user != null && !user.getUsername().isEmpty()) {
+        this.dispose(); // Cierra el formulario de login
+        MainFRM main = new MainFRM(); // Crea la instancia del formulario principal
+        main.setVisible(true); // Muestra el formulario principal
+    } else {
+        JOptionPane.showMessageDialog(null, "Credenciales incorrectas");
+    }   
+
+
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
-       RegistroFrm registroFrm=new RegistroFrm();
-       registroFrm.setVisible(true);
+        RegistroFrm registroFrm = new RegistroFrm();
+        registroFrm.setVisible(true);
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
     public static void main(String args[]) {
@@ -162,6 +178,8 @@ public class LoginFrm extends javax.swing.JFrame {
             }
         });
     }
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;

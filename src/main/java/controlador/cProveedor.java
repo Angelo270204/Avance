@@ -2,10 +2,15 @@ package controlador;
 
 import modelo.Proveedor;
 import dao.ProveedorDao;
+import java.util.List;
 
 public class cProveedor {
     private final ProveedorDao proveedorDao;
 
+    public List<Proveedor> listarProveedores(){
+        return proveedorDao.getAllProveedores();
+    }
+    
     public cProveedor(ProveedorDao proveedorDao) {
         this.proveedorDao = proveedorDao;
     }

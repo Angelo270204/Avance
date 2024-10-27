@@ -3,6 +3,7 @@ package controlador;
 import modelo.Producto;
 import dao.ProductoDao;
 import java.sql.Connection;
+import java.util.List;
 
 public class cProducto {
     private final ProductoDao productoDao;
@@ -11,6 +12,10 @@ public class cProducto {
         this.productoDao = new ProductoDao(connection);
     }
 
+    public List<Producto> obtenerProductos(){
+        return productoDao.getAllProductos();
+    }
+    
     public boolean registrarProducto(Producto producto) {
         return productoDao.addProducto(producto);
     }

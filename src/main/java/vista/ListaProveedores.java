@@ -1,11 +1,32 @@
-
 package vista;
 
+import controlador.cProveedor;
+import dao.ProveedorDao;
+import java.sql.Connection;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import modelo.Proveedor;
+import util.DataSource;
+
 public class ListaProveedores extends javax.swing.JFrame {
+
+    // Obtener la conexión a la base de datos
+    Connection conexion = DataSource.obtenerConexion();
+
+    // Crear instancia de ProveedorDao con la conexión
+    ProveedorDao proveedorDao = new ProveedorDao(conexion);
+
+    // Crear instancia del controlador con el DAO
+    cProveedor controlador = new cProveedor(proveedorDao);
+
+    DefaultTableModel modelo;
 
     public ListaProveedores() {
         initComponents();
         setLocationRelativeTo(null);
+
+        modelo = (DefaultTableModel) tblProveedores.getModel();
+        llenarTabla();
     }
 
     @SuppressWarnings("unchecked")
@@ -138,9 +159,32 @@ public class ListaProveedores extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarProveedorActionPerformed
-       AgrProveedorFRM agrProveedor = new AgrProveedorFRM();
-       agrProveedor.setVisible(true);
+        AgrProveedorFRM agrProveedor = new AgrProveedorFRM();
+        agrProveedor.setVisible(true);
     }//GEN-LAST:event_btnAgregarProveedorActionPerformed
+
+    private void llenarTabla() {
+
+        // Obtener la lista de proveedores del controlador
+        List<Proveedor> proveedores = controlador.listarProveedores();
+
+        // Limpiar las filas existentes en la tabla
+        modelo.setRowCount(0);
+
+        // Agregar los proveedores al modelo de la tabla
+        for (Proveedor p : proveedores) {
+            modelo.addRow(new Object[]{
+                p.getIdProveedor(),
+                p.getNombre(),
+                p.getRuc(),
+                p.getCorreo(),
+                p.getCelular(),
+                p.getDireccion(),
+                p.getPais()
+            });
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarProveedor;
