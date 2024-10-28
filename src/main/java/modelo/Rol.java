@@ -1,34 +1,64 @@
-
 package modelo;
 
+/**
+ * Clase que representa un rol en el sistema.
+ */
 public class Rol {
-    private int idTipo;
-    private String nombreRol;
+    private int id_tipo; // Identificador del tipo de rol
+    private String nombre_rol; // Nombre del rol
 
+    /**
+     * Constructor vacío de la clase Rol.
+     */
     public Rol() {
     }
 
-    public Rol(int idTipo, String nombreRol) {
-        this.idTipo = idTipo;
-        this.nombreRol = nombreRol;
+    /**
+     * Constructor de la clase Rol con parámetros.
+     *
+     * @param id_tipo    El identificador del tipo de rol.
+     * @param nombre_rol El nombre del rol.
+     */
+    public Rol(int id_tipo, String nombre_rol) {
+        this.id_tipo = id_tipo;
+        this.nombre_rol = nombre_rol;
     }
 
-    public int getIdTipo() {
-        return idTipo;
+    /**
+     * Obtiene el identificador del tipo de rol.
+     *
+     * @return El identificador del tipo de rol.
+     */
+    public int getId_tipo() {
+        return id_tipo;
     }
 
-    public void setIdTipo(int idTipo) {
-        this.idTipo = idTipo;
+    /**
+     * Establece el identificador del tipo de rol.
+     *
+     * @param id_tipo El nuevo identificador del tipo de rol.
+     */
+    public void setId_tipo(int id_tipo) {
+        this.id_tipo = id_tipo;
     }
 
-    public String getNombreRol() {
-        return nombreRol;
+    /**
+     * Obtiene el nombre del rol.
+     *
+     * @return El nombre del rol.
+     */
+    public String getNombre_rol() {
+        return nombre_rol;
     }
 
-    public void setNombreRol(String nombreRol) {
-        this.nombreRol = nombreRol;
+    /**
+     * Establece el nombre del rol.
+     *
+     * @param nombre_rol El nuevo nombre del rol.
+     */
+    public void setNombre_rol(String nombre_rol) {
+        this.nombre_rol = nombre_rol;
     }
-    
-    
-    
+
 }
+

@@ -8,11 +8,13 @@ import modelo.Usuario;
 import util.DataSource;
 
 public class LoginFrm extends javax.swing.JFrame {
-
+// Se inicializa un objeto UsuarioDao para gestionar la conexión con la base de datos.
     UsuarioDao usuarioDao=new UsuarioDao(DataSource.obtenerConexion());
+    // Se crea un controlador cUsuario que utilizará el UsuarioDao para manejar las credenciales.
     cUsuario controlador=new cUsuario(usuarioDao);
     
 
+    // Constructor de la clase LoginFrm. Inicializa los componentes del formulario y lo centra en pantalla.
     public LoginFrm() {
         initComponents();
         setLocationRelativeTo(null);
@@ -130,26 +132,31 @@ public class LoginFrm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
-
+// Evento al presionar el botón "Ingresar".
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
+        // Se validan las credenciales ingresadas.
         Usuario user = controlador.validarCredenciales(txtUsuario.getText(), txtContraseña.getText());
 
-        // Comprueba si se obtuvo un usuario válido
+        // Si las credenciales son correctas, se abre el formulario principal.
         if (user != null && !user.getUsername().isEmpty()) {
             this.dispose(); // Cierra el formulario de login
             MainFRM main = new MainFRM(); // Crea la instancia del formulario principal
             main.setVisible(true); // Muestra el formulario principal
         } else {
+            // Muestra un mensaje de error si las credenciales son incorrectas.
             JOptionPane.showMessageDialog(null, "Credenciales incorrectas");
         }
 
 
     }//GEN-LAST:event_btnIngresarActionPerformed
 
+    
+    // Evento al presionar el botón "Registrarse".
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
+        // Abre el formulario de registro.
         RegistroFrm registroFrm = new RegistroFrm();
-        this.dispose();
-        registroFrm.setVisible(true);
+        this.dispose();// Cierra el formulario de login.
+        registroFrm.setVisible(true);// Muestra el formulario de registro.
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
 

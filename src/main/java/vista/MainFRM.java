@@ -5,20 +5,22 @@ import controlador.cProducto;
 import util.DataSource;
 
 public class MainFRM extends javax.swing.JFrame {
-
+    // Controlador para gestionar productos utilizando una conexión a la base de datos.
     cProducto controlProd=new cProducto(DataSource.obtenerConexion());
+    
+    // Variables que almacenan el total de productos y el número de productos con bajo stock.
      int total = controlProd.obtenerTotalProductos();
      int bajoStock=controlProd.obtenerBajoStock();
-    public MainFRM() {
+    
+     // Constructor del formulario principal.
+     public MainFRM() {
         initComponents();
         setLocationRelativeTo(null);
+        
+        // Asigna los valores obtenidos a los campos de texto correspondientes.
         txtTotalProductos.setText(String.valueOf(total));
         txtBajoStock.setText(String.valueOf(bajoStock));
     }
-    
-    
-    
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -140,18 +142,22 @@ public class MainFRM extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    // Acción del botón para abrir la ventana de lista de productos.
     private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
         ListaProductosFRM listaProductos = new ListaProductosFRM();
-        this.dispose();
-        listaProductos.setVisible(true);
+        this.dispose(); // Cierra el formulario actual.
+        listaProductos.setVisible(true); // Muestra la ventana de productos.
     }//GEN-LAST:event_btnProductosActionPerformed
 
+    // Acción del botón para abrir la ventana de lista de proveedores.
     private void btnProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProveedoresActionPerformed
        ListaProveedores listaProveedores = new ListaProveedores();
        this.dispose();
        listaProveedores.setVisible(true);
     }//GEN-LAST:event_btnProveedoresActionPerformed
-
+    
+    // Acción del botón para abrir la ventana de lista de pedidos.
     private void btnPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPedidosActionPerformed
        ListaPedidosFrm listaPedidos = new ListaPedidosFrm();
        this.dispose();

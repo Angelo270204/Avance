@@ -1,10 +1,10 @@
-
 package vista;
 
 import controlador.cEmpleado;
 import controlador.cRol;
 import controlador.cUsuario;
 import dao.UsuarioDao;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Empleado;
@@ -14,30 +14,39 @@ import util.DataSource;
 
 public class RegistroFrm extends javax.swing.JFrame {
 
+    // Lista de empleados y controlador para la gestión de empleados.
     private final List<Empleado> lstEmpleados;
-    cEmpleado controlEmp=new cEmpleado(DataSource.obtenerConexion());
-    
+    cEmpleado controlEmp = new cEmpleado(DataSource.obtenerConexion());
+
+    // Lista de roles y controlador para la gestión de roles.
     private final List<Rol> lstRol;
-    cRol controlRol=new cRol(DataSource.obtenerConexion());
-    
-    DataSource conexion=new DataSource();
-    UsuarioDao usuarioDao=new UsuarioDao(conexion.obtenerConexion());
-    cUsuario controlador=new cUsuario(usuarioDao);
-    
+    cRol controlRol = new cRol(DataSource.obtenerConexion());
+
+    // Configuración de conexión a la base de datos.
+    DataSource conexion = new DataSource();
+    UsuarioDao usuarioDao = new UsuarioDao(conexion.obtenerConexion());
+    cUsuario controlador = new cUsuario(usuarioDao);
+
+    // Constructor del formulario de registro.
     public RegistroFrm() {
         initComponents();
         setLocationRelativeTo(null);
-        lstEmpleados=controlEmp.listarEmpleados();
         
-        for(Empleado aux:lstEmpleados){
-            String cat=aux.getIdEmpleado()+"|"+aux.getNombre()+"|"+aux.getApellido();
+        // Carga la lista de empleados y los añade al ComboBox.
+        lstEmpleados = controlEmp.listarEmpleados();
+        
+        for (Empleado aux : lstEmpleados) {
+            // Formatea la información del empleado para mostrarla en el ComboBox.
+            String cat = aux.getIdEmpleado() + "|" + aux.getNombre() + "|" + aux.getApellido();
             this.cmbEmpleado.addItem(cat);
         }
-        
-        lstRol=controlRol.listarRoles();
-        
-        for(Rol aux:lstRol){
-            String cat=aux.getIdTipo()+"|"+aux.getNombreRol();
+
+        // Carga la lista de roles y los añade al ComboBox.
+        lstRol = controlRol.listarRoles();
+
+        for (Rol aux : lstRol) {
+            // Formatea la información del rol para mostrarla en el ComboBox.
+            String cat = aux.getId_tipo() + "|" + aux.getNombre_rol();
             this.cmbRol.addItem(cat);
         }
     }
@@ -101,7 +110,7 @@ public class RegistroFrm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
@@ -151,45 +160,99 @@ public class RegistroFrm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-       this.dispose();
+        this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        Usuario user=new Usuario();
-        //Obtener el empleado obtenido desde el combo box
-        String empleadoSeleccionado=(String)cmbEmpleado.getSelectedItem();
-        //Separar el id del nombre
-        String[] partes=empleadoSeleccionado.split("\\|");
-        int idEmpleado = Integer.parseInt(partes[0]);
-        
-        //Crear un nuevo objeto empleado y establecerlo en el usuario
-        Empleado emp=new Empleado();
-        emp.setIdEmpleado(idEmpleado);
-        emp.setNombre(partes[1]);
-        emp.setApellido(partes[2]);
-        user.setEmpleado(emp);
-        user.setUsername(txtUsuario.getText());
-        user.setPassword(txtContraseña.getText());
-        
-        String rolSeleccionado=(String)cmbRol.getSelectedItem();
-        String[] separar=rolSeleccionado.split("\\|");
-        int idRol=Integer.parseInt(separar[0]);
-        
-        Rol rol=new Rol();
-        rol.setIdTipo(idRol);
-        rol.setNombreRol(partes[1]);
-        
-        user.setRol(rol);
-        
-        boolean registrado = controlador.registrarUsuario(user);
-    
-    // Comprobar el resultado del registro
-    if (registrado) {
-        JOptionPane.showMessageDialog(null, "Usuario registrado exitosamente.");
-        // Aquí puedes limpiar los campos o cerrar el formulario
-    } 
+        try {
+            // Validar que los campos no estén vacíos
+            if (txtUsuario.getText().trim().isEmpty() || txtContraseña.getText().trim().isEmpty()
+                    || cmbEmpleado.getSelectedIndex() == -1 || cmbRol.getSelectedIndex() == -1) {
+                JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios",
+                        "Error de validación", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Usuario user = new Usuario();
+
+            // Procesar empleado seleccionado
+            String empleadoSeleccionado = (String) cmbEmpleado.getSelectedItem();
+            String[] partesEmpleado = empleadoSeleccionado.split("\\|");
+            if (partesEmpleado.length < 3) {
+                JOptionPane.showMessageDialog(this, "Error en el formato del empleado seleccionado",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Crear y establecer el empleado
+            Empleado emp = new Empleado();
+            emp.setIdEmpleado(Integer.parseInt(partesEmpleado[0].trim()));
+            emp.setNombre(partesEmpleado[1].trim());
+            emp.setApellido(partesEmpleado[2].trim());
+            user.setEmpleado(emp);
+
+            // Establecer username y password
+            user.setUsername(txtUsuario.getText().trim());
+            user.setPassword(txtContraseña.getText().trim());
+
+            // Procesar rol seleccionado
+            String rolSeleccionado = (String) cmbRol.getSelectedItem();
+            String[] partesRol = rolSeleccionado.split("\\|");
+            if (partesRol.length < 2) {
+                JOptionPane.showMessageDialog(this, "Error en el formato del rol seleccionado",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Crear y establecer el rol
+            Rol rol = new Rol();
+            rol.setId_tipo(Integer.parseInt(partesRol[0].trim()));
+            rol.setNombre_rol(partesRol[1].trim());
+            user.setRol(rol);
+
+            // Establecer la fecha de acceso como la fecha actual
+            user.setFechaUltimoAcceso(new Date());
+
+            // Intentar crear el usuario
+            Usuario usuarioCreado = controlador.crearUsuario(user);
+
+            if (usuarioCreado != null && usuarioCreado.getIdUsuario() > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Usuario registrado exitosamente",
+                        "Registro exitoso",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                // Limpiar los campos del formulario
+                limpiarCampos();
+
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No se pudo registrar el usuario",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al procesar los datos numéricos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al registrar el usuario: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
+    private void limpiarCampos() {
+        txtUsuario.setText("");
+        txtContraseña.setText("");
+        cmbEmpleado.setSelectedIndex(0);
+        cmbRol.setSelectedIndex(0);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;

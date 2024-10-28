@@ -33,4 +33,15 @@ public class cEmpleado {
             e.printStackTrace();
         }
     }
+    
+    public Empleado obtenerEmpleadoPorId(int idEmpleado) {
+    Empleado empleado = null;
+    try {
+        empleado = empleadoDao.obtenerEmpleadoPorId(idEmpleado);
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Manejar excepción (puedes lanzar una RuntimeException o retornar null)
+    }
+    return empleado;
+}
 }
