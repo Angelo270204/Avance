@@ -2,7 +2,6 @@ package vista;
 
 import controlador.cCategoria;
 import controlador.cProducto;
-import java.sql.Connection;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Categoria;
@@ -12,14 +11,11 @@ import util.DataSource;
 
 public class AgrProductoFRM extends javax.swing.JFrame {
 
-    // Obtener la conexión a la base de datos
-    Connection conexion = DataSource.obtenerConexion();
+    cProducto controlador = new cProducto(DataSource.obtenerConexion());
 
-    cProducto controlador = new cProducto(conexion);
+    cCategoria controlCategoria = new cCategoria(DataSource.obtenerConexion());
 
-    cCategoria controlCategoria = new cCategoria(conexion);
-
-    private List<Categoria> lstCategorias;
+    private final List<Categoria> lstCategorias;
 
     public AgrProductoFRM() {
         initComponents();
@@ -33,6 +29,7 @@ public class AgrProductoFRM extends javax.swing.JFrame {
     }
 
     ListaProductosFRM vistaFrm=new ListaProductosFRM();
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -129,10 +126,10 @@ public class AgrProductoFRM extends javax.swing.JFrame {
                 .addGap(32, 32, 32))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
-                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(114, 114, 114))
+                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(103, 103, 103))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,11 +211,14 @@ public class AgrProductoFRM extends javax.swing.JFrame {
             // Llama a este método para actualizar la tabla de productos
             vistaFrm.llenarTabla();
             this.dispose();
+            vistaFrm.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Error al guardar el producto.");
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

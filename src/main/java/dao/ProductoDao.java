@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Categoria;
@@ -117,4 +118,31 @@ public class ProductoDao {
             return false;
         }
     }
+    
+    public int contarProductos() throws SQLException {
+    String query = "SELECT COUNT(cantidad_stock) AS total FROM producto"; 
+    int total = 0;
+
+    try (Statement stmt = connection.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        if (rs.next()) {
+            total = rs.getInt("total");
+        }
+    }
+    return total;
+}
+    
+    public int contarProductosBajoStock() throws SQLException {
+        String query = "SELECT COUNT(*) AS total FROM producto WHERE cantidad_stock <= 2"; 
+        int total = 0;
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        }
+        return total;
+    }
+
 }

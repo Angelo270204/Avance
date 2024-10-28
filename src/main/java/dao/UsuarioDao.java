@@ -4,122 +4,87 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import modelo.Empleado;
 import modelo.Rol;
 import modelo.Usuario;
-import util.DataSource;
 
 public class UsuarioDao {
 
-    private Connection conexion;
+    private Connection connection;
 
-    public UsuarioDao() {
-        conexion=DataSource.obtenerConexion();
+    public UsuarioDao(Connection connection) {
+        this.connection = connection;
     }
 
-    public List<Usuario> getAllUsuarios() {
+    // Método para listar todos los usuarios con sus empleados y roles
+    public List<Usuario> listarUsuarios() throws SQLException {
+        String query = """
+            SELECT u.id_usuario, u.username, u.password, u.fecha_acceso, 
+                   e.id_empleado, e.nombre AS nombreEmpleado, e.apellido AS apellidoEmpleado,
+                   r.id_tipo, r.nombre_rol
+            FROM Usuario u
+            INNER JOIN empleado e ON u.id_empleado = e.id_empleado
+            INNER JOIN rol r ON u.id_rol = r.id_tipo
+        """;
+
         List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT id_usuario, id_empleado, username, password, id_rol, fecha_acceso FROM usuario";
-
-        try (PreparedStatement ps = conexion.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
             while (rs.next()) {
                 Usuario usuario = new Usuario();
-                usuario.setIdUsuario(rs.getInt("id_usuario"));
-                usuario.setIdEmpleado(rs.getInt("id_empleado"));
+                usuario.setIdUsuario(rs.getInt("idUsuario"));
                 usuario.setUsername(rs.getString("username"));
                 usuario.setPassword(rs.getString("password"));
-                usuario.setIdRol(rs.getInt("id_rol"));
-                usuario.setFechaUltimoAcceso(rs.getDate("fecha_acceso"));
+                usuario.setFechaUltimoAcceso(rs.getDate("fechaUltimoAcceso"));
+
+                // Asignar Empleado
+                Empleado empleado = new Empleado();
+                empleado.setIdEmpleado(rs.getInt("idEmpleado"));
+                empleado.setNombre(rs.getString("nombreEmpleado"));
+                empleado.setApellido(rs.getString("apellidoEmpleado"));
+                usuario.setEmpleado(empleado);
+
+                // Asignar Rol
+                Rol rol = new Rol(rs.getInt("idTipo"), rs.getString("nombreRol"));
+                usuario.setRol(rol);
+
                 usuarios.add(usuario);
             }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepciones
         }
         return usuarios;
     }
 
-    public void addUsuario(Usuario usuario) {
-        String sql = "INSERT INTO usuario (id_empleado, username, password, id_rol, fecha_acceso) VALUES (?, ?, ?, ?, ?)";
+    // Método para agregar un nuevo usuario
+    public boolean registrarUsuario(Usuario usuario) {
+        String sql = "INSERT INTO Usuario (username, password, id_empleado, id_rol) VALUES (?, ?, ?, ?)";
+        boolean registrado = false;
 
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, usuario.getIdEmpleado());
-            ps.setString(2, usuario.getUsername());
-            ps.setString(3, usuario.getPassword());
-            ps.setInt(4, usuario.getIdRol());
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, usuario.getUsername());
+            ps.setString(2, usuario.getPassword());
+            ps.setInt(3, usuario.getEmpleado().getIdEmpleado());
+            ps.setInt(4, usuario.getRol().getIdTipo());
 
-            // Convertir la fecha si es necesario
-            if (usuario.getFechaUltimoAcceso() != null) {
-                java.sql.Date sqlDate = new java.sql.Date(usuario.getFechaUltimoAcceso().getTime());
-                ps.setDate(5, sqlDate);
-            } else {
-                ps.setNull(5, java.sql.Types.DATE); // Si no hay fecha, establecer NULL
-            }
-
-            ps.executeUpdate();
+            int filasAfectadas = ps.executeUpdate();
+            registrado = filasAfectadas > 0; // true si se afectó al menos una fila
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepciones
+            e.printStackTrace();
+        }
+
+        return registrado;
+    }
+
+    // Método para eliminar un usuario por su ID
+    public void eliminarUsuario(int idUsuario) throws SQLException {
+        String query = "DELETE FROM usuario WHERE id_usuario = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, idUsuario);
+            pstmt.executeUpdate();
         }
     }
 
-    public Usuario leer(int id) {
-        Usuario usuario = null;
-        String sql = "SELECT id_usuario, id_empleado, username, password, id_tipo, fecha_acceso FROM usuario WHERE id_usuario = ?";
-
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                usuario = new Usuario();
-                usuario.setIdUsuario(rs.getInt("id_usuario"));
-                usuario.setIdEmpleado(rs.getInt("id_empleado"));
-                usuario.setUsername(rs.getString("username"));
-                usuario.setPassword(rs.getString("password"));
-                usuario.setIdRol(rs.getInt("id_rol"));
-                usuario.setFechaUltimoAcceso(rs.getDate("fecha_acceso"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepciones
-        }
-        return usuario;
-    }
-
-    public boolean actualizar(Usuario usuario) {
-        String sql = "UPDATE usuario SET id_empleado = ?, username = ?, password = ?, id_rol = ?, fecha_acceso = ? WHERE id_usuario = ?";
-
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, usuario.getIdEmpleado());
-            ps.setString(2, usuario.getUsername());
-            ps.setString(3, usuario.getPassword());
-            ps.setInt(4, usuario.getIdRol());
-            // Convertir la fecha si es necesario
-            if (usuario.getFechaUltimoAcceso() != null) {
-                java.sql.Date sqlDate = new java.sql.Date(usuario.getFechaUltimoAcceso().getTime());
-                ps.setDate(5, sqlDate);
-            } else {
-                ps.setNull(5, java.sql.Types.DATE); // Si no hay fecha, establecer NULL
-            }
-            ps.setInt(6, usuario.getIdUsuario());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepciones
-            return false;
-        }
-    }
-
-    public boolean eliminar(int id) {
-        String sql = "DELETE FROM usuario WHERE id_usuario = ?";
-
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepciones
-            return false;
-        }
-    }
-    
     public Usuario validarCredenciales(String username,String password){
         
         // Lógica para consultar la base de datos y validar las credenciales
@@ -128,7 +93,7 @@ public class UsuarioDao {
         // Supongamos que tienes una consulta SQL para obtener el usuario
         String sql = "SELECT * FROM usuario WHERE username = ? AND password = ?";
         
-        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
@@ -145,5 +110,23 @@ public class UsuarioDao {
         }
 
         return usuario;
+    }
+
+    
+    public boolean existeUsuario(String username) {
+        boolean existe = false;
+        String sql = "SELECT COUNT(*) FROM usuario WHERE username = ?"; // Cambia "usuarios" por el nombre de tu tabla
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                existe = rs.getInt(1) > 0; // Si el conteo es mayor que 0, el usuario existe
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return existe;
     }
 }

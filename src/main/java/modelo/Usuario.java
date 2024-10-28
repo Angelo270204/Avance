@@ -5,21 +5,21 @@ import java.util.Date;
 
 public class Usuario {
     private int idUsuario;
-    private int idEmpleado;
+    private Empleado empleado;
     private String username;
     private String password;
-    private int idRol;
+    private Rol rol;
     private Date fechaUltimoAcceso;
 
     public Usuario() {
     }
 
-    public Usuario(int idUsuario, int idEmpleado, String username, String password, int idRol, Date fechaUltimoAcceso) {
+    public Usuario(int idUsuario, Empleado empleado, String username, String password, Rol rol, Date fechaUltimoAcceso) {
         this.idUsuario = idUsuario;
-        this.idEmpleado = idEmpleado;
+        this.empleado = empleado;
         this.username = username;
         this.password = password;
-        this.idRol = idRol;
+        this.rol = rol;
         this.fechaUltimoAcceso = fechaUltimoAcceso;
     }
 
@@ -31,12 +31,12 @@ public class Usuario {
         this.idUsuario = idUsuario;
     }
 
-    public int getIdEmpleado() {
-        return idEmpleado;
+    public Empleado getEmpleado() {
+        return empleado;
     }
 
-    public void setIdEmpleado(int idEmpleado) {
-        this.idEmpleado = idEmpleado;
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
     }
 
     public String getUsername() {
@@ -55,12 +55,12 @@ public class Usuario {
         this.password = password;
     }
 
-    public int getIdRol() {
-        return idRol;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setIdRol(int idRol) {
-        this.idRol = idRol;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 
     public Date getFechaUltimoAcceso() {
@@ -70,6 +70,6 @@ public class Usuario {
     public void setFechaUltimoAcceso(Date fechaUltimoAcceso) {
         this.fechaUltimoAcceso = fechaUltimoAcceso;
     }
-    
-    
+
+ 
 }

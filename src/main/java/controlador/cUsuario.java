@@ -3,40 +3,58 @@ package controlador;
 import modelo.Usuario;
 import dao.UsuarioDao;
 import java.sql.Connection;
-import vista.LoginFrm;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 public class cUsuario {
     
     private UsuarioDao usuarioDao;
-    private LoginFrm vista;
 
-    public cUsuario(LoginFrm vista) { 
-        this.vista = vista;
-        this.usuarioDao = new UsuarioDao();
-        this.vista.setControlador(this); 
+    public cUsuario(UsuarioDao usuarioDAO) {
+        this.usuarioDao = usuarioDAO;
     }
 
-    
-
-    public boolean registrarUsuario(Usuario usuario) {
+    // Método para listar usuarios
+    public List<Usuario> listarUsuarios() {
         try {
-            usuarioDao.addUsuario(usuario);
-            return true;
-        } catch (Exception e) { // Manejo de excepciones
-            return false;
+            return usuarioDao.listarUsuarios();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public Usuario obtenerUsuario(int id) {
-        return usuarioDao.leer(id);
+    public boolean registrarUsuario(Usuario usuario) {
+    // Verificar que los campos requeridos no estén vacíos
+    if (usuario.getUsername() == null || usuario.getUsername().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "El campo 'Usuario' no puede estar vacío.");
+        return false; // Registro no exitoso
+    }
+    
+    if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "El campo 'Contraseña' no puede estar vacío.");
+        return false; // Registro no exitoso
     }
 
-    public boolean actualizarUsuario(Usuario usuario) {
-        return usuarioDao.actualizar(usuario);
+    // Validar si el usuario ya existe en la base de datos
+    if (usuarioDao.existeUsuario(usuario.getUsername())) {
+        JOptionPane.showMessageDialog(null, "El usuario ya existe. Por favor elige otro nombre de usuario.");
+        return false; // Registro no exitoso
     }
 
-    public boolean eliminarUsuario(int id) {
-        return usuarioDao.eliminar(id);
+    // Si todas las validaciones pasan, registrar el usuario
+    return usuarioDao.registrarUsuario(usuario);
+}
+
+    // Método para eliminar un usuario
+    public void eliminarUsuario(int idUsuario) {
+        try {
+            usuarioDao.eliminarUsuario(idUsuario);
+            System.out.println("Usuario eliminado con éxito.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     // Método para validar credenciales
@@ -45,6 +63,5 @@ public class cUsuario {
         Usuario user = usuarioDao.validarCredenciales(username, password);
         return user; // Devuelve el usuario encontrado
     }
-    
     
 }

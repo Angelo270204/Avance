@@ -42,11 +42,11 @@
               <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jLabel3" min="-2" pref="41" max="-2" attributes="0"/>
-                  <Component id="btnProveedores" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnProductos" max="32767" attributes="0"/>
+                  <Component id="btnProveedores" alignment="0" pref="105" max="32767" attributes="0"/>
                   <Component id="btnPedidos" alignment="0" max="32767" attributes="0"/>
-                  <Component id="btnProductos" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="198" max="32767" attributes="0"/>
+              <EmptySpace pref="180" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

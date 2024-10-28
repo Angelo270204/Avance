@@ -1,17 +1,24 @@
 package vista;
 
+import controlador.cProducto;
 import controlador.cUsuario;
+import dao.UsuarioDao;
 import javax.swing.JOptionPane;
 import modelo.Usuario;
+import util.DataSource;
 
 public class LoginFrm extends javax.swing.JFrame {
 
-    private cUsuario controlador;
+    UsuarioDao usuarioDao=new UsuarioDao(DataSource.obtenerConexion());
+    cUsuario controlador=new cUsuario(usuarioDao);
+    
 
     public LoginFrm() {
         initComponents();
         setLocationRelativeTo(null);
     }
+    
+   
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -90,7 +97,7 @@ public class LoginFrm extends javax.swing.JFrame {
                 .addGap(111, 111, 111)
                 .addComponent(btnRegistrarse)
                 .addGap(18, 18, 18)
-                .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -123,63 +130,28 @@ public class LoginFrm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
 
-    public void setControlador(cUsuario controlador) {
-        this.controlador = controlador;
-    }
-    
+
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        Usuario user = controlador.validarCredenciales(txtUsuario.getText(),txtContraseña.getText() );
+        Usuario user = controlador.validarCredenciales(txtUsuario.getText(), txtContraseña.getText());
 
         // Comprueba si se obtuvo un usuario válido
-    if (user != null && !user.getUsername().isEmpty()) {
-        this.dispose(); // Cierra el formulario de login
-        MainFRM main = new MainFRM(); // Crea la instancia del formulario principal
-        main.setVisible(true); // Muestra el formulario principal
-    } else {
-        JOptionPane.showMessageDialog(null, "Credenciales incorrectas");
-    }   
+        if (user != null && !user.getUsername().isEmpty()) {
+            this.dispose(); // Cierra el formulario de login
+            MainFRM main = new MainFRM(); // Crea la instancia del formulario principal
+            main.setVisible(true); // Muestra el formulario principal
+        } else {
+            JOptionPane.showMessageDialog(null, "Credenciales incorrectas");
+        }
 
 
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void btnRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarseActionPerformed
         RegistroFrm registroFrm = new RegistroFrm();
+        this.dispose();
         registroFrm.setVisible(true);
     }//GEN-LAST:event_btnRegistrarseActionPerformed
 
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginFrm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginFrm().setVisible(true);
-            }
-        });
-    }
-
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIngresar;

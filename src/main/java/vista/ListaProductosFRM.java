@@ -1,28 +1,28 @@
-
 package vista;
 
 import controlador.cProducto;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Producto;
 import util.DataSource;
-
 
 public class ListaProductosFRM extends javax.swing.JFrame {
 
     // Obtener la conexión a la base de datos
     Connection conexion = DataSource.obtenerConexion();
-    
-    cProducto controlador=new cProducto(conexion);
-    
+
+    cProducto controlador = new cProducto(conexion);
+
     DefaultTableModel modelo;
-    
+
     public ListaProductosFRM() {
         initComponents();
         setLocationRelativeTo(null);
-        modelo=(DefaultTableModel)tblProductos.getModel();
+        modelo = (DefaultTableModel) tblProductos.getModel();
         llenarTabla();
     }
 
@@ -42,6 +42,11 @@ public class ListaProductosFRM extends javax.swing.JFrame {
         btnAgregar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Gill Sans MT", 1, 16)); // NOI18N
         jLabel3.setText("LISTA DE PRODUCTOS");
@@ -93,6 +98,11 @@ public class ListaProductosFRM extends javax.swing.JFrame {
 
         btnEliminar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnAgregar.setFont(new java.awt.Font("Gill Sans MT", 0, 16)); // NOI18N
         btnAgregar.setText("Agregar");
@@ -106,33 +116,31 @@ public class ListaProductosFRM extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(278, 278, 278)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(52, 52, 52)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(226, 226, 226)
-                                .addComponent(jLabel3)
-                                .addGap(190, 190, 190)
-                                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(17, 17, 17)
-                                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmbProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jLabel4)
+                        .addGap(17, 17, 17)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(cmbProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 755, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(294, 294, 294)
-                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(279, 279, 279)
+                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
-                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -166,30 +174,48 @@ public class ListaProductosFRM extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         AgrProductoFRM agrProducto = new AgrProductoFRM();
+        this.dispose();
         agrProducto.setVisible(true);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-   public  void llenarTabla() {
-    // Obtener la lista de productos del controlador
-    List<Producto> productos = controlador.obtenerProductos();
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        MainFRM main = new MainFRM();
+        main.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
 
-    // Limpiar las filas existentes en la tabla
-    modelo.setRowCount(0);
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int selectedRow = tblProductos.getSelectedRow();
+        if (selectedRow != -1) { // Verifica si hay una fila seleccionada
+            int idProducto = (int) modelo.getValueAt(selectedRow, 0); // Asumiendo que el ID está en la primera columna
+            controlador.eliminarProducto(idProducto); // Elimina el producto de la base de datos
+            modelo.removeRow(selectedRow); // Elimina la fila de la tabla
+            JOptionPane.showMessageDialog(this, "Producto eliminado exitosamente.");
 
-    // Agregar los productos al modelo de la tabla
-    for (Producto p : productos) {
-        modelo.addRow(new Object[]{
-            p.getIdProducto(),
-            p.getNombre(),
-            p.getCategoria().getNombreCategoria(), // Mostrar nombre de la categoría
-            p.getDescripcion(),
-            p.getCantidadStock(),
-            p.getPrecio()
-        });
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminar.");
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    public void llenarTabla() {
+        // Obtener la lista de productos del controlador
+        List<Producto> productos = controlador.obtenerProductos();
+
+        // Limpiar las filas existentes en la tabla
+        modelo.setRowCount(0);
+
+        // Agregar los productos al modelo de la tabla
+        for (Producto p : productos) {
+            modelo.addRow(new Object[]{
+                p.getIdProducto(),
+                p.getNombre(),
+                p.getCategoria().getNombreCategoria(), // Mostrar nombre de la categoría
+                p.getDescripcion(),
+                p.getCantidadStock(),
+                p.getPrecio()
+            });
+        }
     }
-}
-        
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

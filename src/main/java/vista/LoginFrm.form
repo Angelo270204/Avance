@@ -57,7 +57,7 @@
               <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
               <Component id="btnRegistrarse" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="btnIngresar" min="-2" pref="78" max="-2" attributes="0"/>
+              <Component id="btnIngresar" min="-2" pref="90" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>

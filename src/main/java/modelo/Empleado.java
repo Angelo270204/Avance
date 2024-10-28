@@ -6,27 +6,27 @@ public class Empleado {
     private String nombre;
     private String apellido;
     private String dni;
-    private String edad;
-    private int idSexo;
+    private int edad;
+    private Sexo sexo;
     private String celular;
     private String direccion;
     private String correo;
-    private int idRol;
+    private Rol rol;
 
     public Empleado() {
     }
 
-    public Empleado(int idEmpleado, String nombre, String apellido, String dni, String edad, int idSexo, String celular, String direccion, String correo, int idRol) {
+    public Empleado(int idEmpleado, String nombre, String apellido, String dni, int edad, Sexo sexo, String celular, String direccion, String correo, Rol rol) {
         this.idEmpleado = idEmpleado;
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
         this.edad = edad;
-        this.idSexo = idSexo;
+        this.sexo = sexo;
         this.celular = celular;
         this.direccion = direccion;
         this.correo = correo;
-        this.idRol = idRol;
+        this.rol = rol;
     }
 
     public int getIdEmpleado() {
@@ -61,20 +61,20 @@ public class Empleado {
         this.dni = dni;
     }
 
-    public String getEdad() {
+    public int getEdad() {
         return edad;
     }
 
-    public void setEdad(String edad) {
+    public void setEdad(int edad) {
         this.edad = edad;
     }
 
-    public int getIdSexo() {
-        return idSexo;
+    public Sexo getSexo() {
+        return sexo;
     }
 
-    public void setIdSexo(int idSexo) {
-        this.idSexo = idSexo;
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
     }
 
     public String getCelular() {
@@ -101,13 +101,14 @@ public class Empleado {
         this.correo = correo;
     }
 
-    public int getIdRol() {
-        return idRol;
+    public Rol getRol() {
+        return rol;
     }
 
-    public void setIdRol(int idRol) {
-        this.idRol = idRol;
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
+
     
-    
+
 }
