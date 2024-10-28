@@ -11,15 +11,19 @@ import util.DataSource;
 
 public class AgrProductoFRM extends javax.swing.JFrame {
 
+    //Controladores para acceder a sus metodos
     cProducto controlador = new cProducto(DataSource.obtenerConexion());
 
     cCategoria controlCategoria = new cCategoria(DataSource.obtenerConexion());
 
+    //Atributo donde se guardaran las categorias
     private final List<Categoria> lstCategorias;
 
     public AgrProductoFRM() {
         initComponents();
         setLocationRelativeTo(null);
+        
+        // Carga las categorías en el ComboBox.
         lstCategorias = controlCategoria.obtenerTodasLasCategorias();
 
         for (Categoria aux : lstCategorias) {
@@ -177,6 +181,8 @@ public class AgrProductoFRM extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
+        ListaProductosFRM vista=new ListaProductosFRM();
+        vista.setVisible(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
