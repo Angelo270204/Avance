@@ -2,58 +2,45 @@
 package vista;
 
 import controlador.cProveedor;
-import dao.ProveedorDao;
-import java.sql.Connection;
+import javax.swing.JOptionPane;
 import modelo.Proveedor;
-import util.DataSource;
 
-public class AgrProveedorFRM extends javax.swing.JFrame {
+public class EdicionProveedor extends javax.swing.JFrame {
 
-    // Obtener la conexión a la base de datos
-    Connection conexion = DataSource.obtenerConexion();
-
-    // Crear instancia de ProveedorDao con la conexión
-    ProveedorDao proveedorDao = new ProveedorDao(conexion);
-
-    // Crear instancia del controlador con el DAO
-    cProveedor controlador = new cProveedor(proveedorDao);
+    private Proveedor proveedor;
+    private ListaProveedores listaProveedores;
+   
     
-    
-    
-    public AgrProveedorFRM() {
+    public EdicionProveedor(Proveedor proveedor, ListaProveedores listaProveedores) {
         initComponents();
-        setLocationRelativeTo(null);
+        this.proveedor=proveedor;
+        this.listaProveedores=listaProveedores;
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         txtNombreEmpresa = new javax.swing.JTextField();
         txtRuc = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
         txtPais = new javax.swing.JTextField();
-        btnAgregar = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
         btnCancelar = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Gill Sans MT", 1, 16)); // NOI18N
         jLabel1.setText("AGREGAR NUEVO PROVEEDOR");
@@ -70,25 +57,16 @@ public class AgrProveedorFRM extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Gill Sans MT", 1, 14)); // NOI18N
         jLabel5.setText("Información de contacto");
 
-        jLabel6.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
-        jLabel6.setText("Correo:");
-
-        jLabel7.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
-        jLabel7.setText("Teléfono:");
-
-        jLabel8.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
-        jLabel8.setText("Dirección:");
-
-        jLabel9.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
-        jLabel9.setText("País:");
-
-        btnAgregar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
-        btnAgregar.setText("Agregar");
-        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
+
+        jLabel6.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
+        jLabel6.setText("Correo:");
 
         btnCancelar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnCancelar.setText("Cancelar");
@@ -98,7 +76,16 @@ public class AgrProveedorFRM extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
+        jLabel7.setText("Teléfono:");
+
         jLabel12.setIcon(new javax.swing.ImageIcon("C:\\Users\\angel\\Downloads\\proveedorLogo.png")); // NOI18N
+
+        jLabel8.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
+        jLabel8.setText("Dirección:");
+
+        jLabel9.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
+        jLabel9.setText("País:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,7 +97,7 @@ public class AgrProveedorFRM extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addComponent(jLabel5)
-                        .addContainerGap(272, Short.MAX_VALUE))
+                        .addContainerGap(264, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,7 +136,7 @@ public class AgrProveedorFRM extends javax.swing.JFrame {
                         .addGap(130, 130, 130)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(34, 34, 34)
-                        .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(106, 106, 106)
                         .addComponent(jLabel1)))
@@ -196,12 +183,17 @@ public class AgrProveedorFRM extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
-                    .addComponent(btnAgregar))
-                .addContainerGap(52, Short.MAX_VALUE))
+                    .addComponent(btnGuardar))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        guardarCambios();
+        listaProveedores.setVisible(true);
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         ListaProveedores vista=new ListaProveedores();
@@ -209,32 +201,36 @@ public class AgrProveedorFRM extends javax.swing.JFrame {
         vista.setVisible(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        Proveedor proveedor = new Proveedor();
+    
+    // Método para asignar los datos del proveedor al formulario
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
+        txtNombreEmpresa.setText(proveedor.getNombre());
+        txtRuc.setText(proveedor.getRuc());
+        txtCorreo.setText(proveedor.getCorreo());
+        txtTelefono.setText(proveedor.getCelular());
+        txtDireccion.setText(proveedor.getDireccion());
+        txtPais.setText(proveedor.getPais());
+    }
+    
+    // Método para guardar los cambios realizados
+    private void guardarCambios() {
         proveedor.setNombre(txtNombreEmpresa.getText());
         proveedor.setRuc(txtRuc.getText());
         proveedor.setCorreo(txtCorreo.getText());
         proveedor.setCelular(txtTelefono.getText());
         proveedor.setDireccion(txtDireccion.getText());
         proveedor.setPais(txtPais.getText());
-        
-        controlador.registrarProveedor(proveedor);
-        ListaProveedores listaProveedores=new ListaProveedores();
-        this.dispose();
-        listaProveedores.setVisible(true);
-        
-    }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        ListaProveedores vista=new ListaProveedores();
-        this.dispose();
-        vista.setVisible(true);
-    }//GEN-LAST:event_formWindowClosing
+        // Actualizar la tabla en la ventana principal
+        listaProveedores.actualizarProveedorEnTabla(proveedor);
+        dispose();  // Cerrar la ventana de edición
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;

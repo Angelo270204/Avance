@@ -65,25 +65,24 @@ public class ProveedorDao {
         }
     }
 
-    // Método para actualizar un proveedor existente
-    public boolean updateProveedor(Proveedor proveedor) {
-        // Consulta SQL para actualizar un proveedor
-        String sql = "UPDATE proveedor SET nombre = ?, ruc = ?, correo = ?, celular = ?, direccion = ?, pais = ? WHERE id_proveedor = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            // Asignar parámetros para la consulta
-            ps.setString(1, proveedor.getNombre());
-            ps.setString(2, proveedor.getRuc());
-            ps.setString(3, proveedor.getCorreo());
-            ps.setString(4, proveedor.getCelular());
-            ps.setString(5, proveedor.getDireccion());
-            ps.setString(6, proveedor.getPais());
-            ps.setInt(7, proveedor.getIdProveedor()); // Asignar ID del proveedor a actualizar
-            return ps.executeUpdate() > 0; // Retorna true si la actualización fue exitosa
-        } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepción
-            return false; // Retornar false si ocurre un error
-        }
+    //Metodo para actualizar el proveedor
+    public boolean actualizar(Proveedor proveedor) {
+    String sql = "UPDATE proveedor SET nombre = ?, ruc = ?, correo = ?, celular = ?, direccion = ?, pais = ? WHERE id_proveedor = ?";
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        ps.setString(1, proveedor.getNombre());
+        ps.setString(2, proveedor.getRuc());
+        ps.setString(3, proveedor.getCorreo());
+        ps.setString(4, proveedor.getCelular());
+        ps.setString(5, proveedor.getDireccion());
+        ps.setString(6, proveedor.getPais());
+        ps.setInt(7, proveedor.getIdProveedor());
+
+        return ps.executeUpdate() > 0;  // Retorna true si la actualización fue exitosa
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;  // Retorna false si ocurre algún error
     }
+}
 
     // Método para eliminar un proveedor por ID
     public boolean deleteProveedor(int id) {
@@ -96,5 +95,32 @@ public class ProveedorDao {
             e.printStackTrace(); // Manejo de excepción
             return false; // Retornar false si ocurre un error
         }
+    }
+    
+    // Método para buscar proveedores por nombre
+    public List<Proveedor> buscarPorNombre(String nombre) {
+        List<Proveedor> listaProveedores = new ArrayList<>();
+        String sql = "SELECT * FROM proveedor WHERE nombre LIKE ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + nombre + "%");  // Búsqueda parcial
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                Proveedor proveedor = new Proveedor(
+                    rs.getInt("id_proveedor"),
+                    rs.getString("nombre"),
+                    rs.getString("ruc"),
+                    rs.getString("correo"),
+                    rs.getString("celular"),
+                    rs.getString("direccion"),
+                    rs.getString("pais")
+                );
+                listaProveedores.add(proveedor);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return listaProveedores;
     }
 }

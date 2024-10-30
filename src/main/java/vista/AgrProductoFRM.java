@@ -10,7 +10,7 @@ import modelo.Producto;
 import util.DataSource;
 
 public class AgrProductoFRM extends javax.swing.JFrame {
-
+    
     //Controladores para acceder a sus metodos
     cProducto controlador = new cProducto(DataSource.obtenerConexion());
 
@@ -56,6 +56,11 @@ public class AgrProductoFRM extends javax.swing.JFrame {
         cmbCategoria = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Gill Sans MT", 1, 14)); // NOI18N
         jLabel1.setText("AGREGAR NUEVO PRODUCTO");
@@ -221,8 +226,16 @@ public class AgrProductoFRM extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Error al guardar el producto.");
         }
+        
     }//GEN-LAST:event_btnAgregarActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        this.dispose();
+        ListaProductosFRM vista=new ListaProductosFRM();
+        vista.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
+
+    
     
     
 

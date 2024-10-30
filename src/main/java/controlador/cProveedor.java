@@ -26,11 +26,17 @@ public class cProveedor {
                 .findFirst()
                 .orElse(null);
     }
+    
     public boolean actualizarProveedor(Proveedor proveedor) {
-        return proveedorDao.updateProveedor(proveedor);
+        return proveedorDao.actualizar(proveedor);
     }
 
     public boolean eliminarProveedor(int id) {
         return proveedorDao.deleteProveedor(id);
+    }
+    
+    // Método para buscar proveedores por nombre y devolver la lista
+    public List<Proveedor> buscarProveedor(String nombre) {
+        return proveedorDao.buscarPorNombre(nombre);
     }
 }

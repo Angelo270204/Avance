@@ -30,6 +30,7 @@ public class ListaProveedores extends javax.swing.JFrame {
         llenarTabla();
     }
 
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -38,7 +39,7 @@ public class ListaProveedores extends javax.swing.JFrame {
         btnAgregarProveedor = new javax.swing.JButton();
         cmbProveedores = new javax.swing.JComboBox<>();
         btnBuscarProveedores = new javax.swing.JButton();
-        txtBuscarPedido1 = new javax.swing.JTextField();
+        txtBuscar = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblProveedores = new javax.swing.JTable();
@@ -68,6 +69,11 @@ public class ListaProveedores extends javax.swing.JFrame {
 
         btnBuscarProveedores.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnBuscarProveedores.setText("Buscar");
+        btnBuscarProveedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProveedoresActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Gill Sans MT", 1, 14)); // NOI18N
         jLabel7.setText("Buscar:");
@@ -81,6 +87,7 @@ public class ListaProveedores extends javax.swing.JFrame {
                 "Id", "Nombre", "RUC", "Correo", "Teléfono", "Dirección", "País"
             }
         ));
+        tblProveedores.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane4.setViewportView(tblProveedores);
         if (tblProveedores.getColumnModel().getColumnCount() > 0) {
             tblProveedores.getColumnModel().getColumn(0).setMinWidth(45);
@@ -102,6 +109,11 @@ public class ListaProveedores extends javax.swing.JFrame {
 
         btnEditar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnEliminar.setText("Eliminar");
@@ -132,7 +144,7 @@ public class ListaProveedores extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(17, 17, 17)
-                        .addComponent(txtBuscarPedido1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(btnBuscarProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37)
@@ -153,7 +165,7 @@ public class ListaProveedores extends javax.swing.JFrame {
                     .addComponent(btnAgregarProveedor))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBuscarPedido1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
                     .addComponent(btnBuscarProveedores)
                     .addComponent(cmbProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -193,6 +205,14 @@ public class ListaProveedores extends javax.swing.JFrame {
        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        abrirVentanaEdicion();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnBuscarProveedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProveedoresActionPerformed
+        buscarProveedores();
+    }//GEN-LAST:event_btnBuscarProveedoresActionPerformed
+
     private void llenarTabla() {
 
         // Obtener la lista de proveedores del controlador
@@ -214,6 +234,61 @@ public class ListaProveedores extends javax.swing.JFrame {
             });
         }
     }
+    
+    // Método para abrir la ventana de edición con los datos del proveedor seleccionado
+    private void abrirVentanaEdicion() {
+        int filaSeleccionada = tblProveedores.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            // Obtener los datos del proveedor seleccionado
+            int id = (int) modelo.getValueAt(filaSeleccionada, 0);
+            String nombre = (String) modelo.getValueAt(filaSeleccionada, 1);
+            String ruc = (String) modelo.getValueAt(filaSeleccionada, 2);
+            String correo = (String) modelo.getValueAt(filaSeleccionada, 3);
+            String celular = (String) modelo.getValueAt(filaSeleccionada, 4);
+            String direccion = (String) modelo.getValueAt(filaSeleccionada, 5);
+            String pais = (String) modelo.getValueAt(filaSeleccionada, 6);
+
+            // Crear el proveedor y abrir la ventana de edición
+            Proveedor proveedor = new Proveedor(id, nombre, ruc, correo, celular, direccion, pais);
+            EdicionProveedor ventanaEdicion = new EdicionProveedor(proveedor, this);
+            ventanaEdicion.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un proveedor para editar.");
+        }
+    }
+
+    // Método para actualizar la tabla después de editar un proveedor
+    public void actualizarProveedorEnTabla(Proveedor proveedor) {
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            if ((int) modelo.getValueAt(i, 0) == proveedor.getIdProveedor()) {
+                modelo.setValueAt(proveedor.getNombre(), i, 1);
+                modelo.setValueAt(proveedor.getRuc(), i, 2);
+                modelo.setValueAt(proveedor.getCorreo(), i, 3);
+                modelo.setValueAt(proveedor.getCelular(), i, 4);
+                modelo.setValueAt(proveedor.getDireccion(), i, 5);
+                modelo.setValueAt(proveedor.getPais(), i, 6);
+                break;
+            }
+        }
+    }
+    
+    // Método para buscar y actualizar la tabla con los resultados
+    private void buscarProveedores() {
+        String nombre = txtBuscar.getText();
+        List<Proveedor> proveedores = controlador.buscarProveedor(nombre);
+        actualizarTabla(proveedores);
+    }
+    
+    // Método para actualizar los datos en la tabla
+    private void actualizarTabla(List<Proveedor> proveedores) {
+        modelo.setRowCount(0);  // Limpiar la tabla
+        for (Proveedor p : proveedores) {
+            modelo.addRow(new Object[]{
+                p.getIdProveedor(), p.getNombre(), p.getRuc(), p.getCorreo(),
+                p.getCelular(), p.getDireccion(), p.getPais()
+            });
+        }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -226,6 +301,6 @@ public class ListaProveedores extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable tblProveedores;
-    private javax.swing.JTextField txtBuscarPedido1;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

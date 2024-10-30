@@ -3,7 +3,6 @@ package vista;
 import controlador.cProducto;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +25,7 @@ public class ListaProductosFRM extends javax.swing.JFrame {
         llenarTabla();
     }
 
+    AgrProductoFRM agrProducto = new AgrProductoFRM();
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -173,7 +173,7 @@ public class ListaProductosFRM extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        AgrProductoFRM agrProducto = new AgrProductoFRM();
+        
         this.dispose();
         agrProducto.setVisible(true);
     }//GEN-LAST:event_btnAgregarActionPerformed
