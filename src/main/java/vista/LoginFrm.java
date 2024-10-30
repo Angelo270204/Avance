@@ -36,6 +36,7 @@ public class LoginFrm extends javax.swing.JFrame {
         txtContraseña = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 102));
 
         jLabel1.setFont(new java.awt.Font("Gill Sans MT", 1, 18)); // NOI18N
         jLabel1.setText("IMPORTACIONES EL SÓTANO");
