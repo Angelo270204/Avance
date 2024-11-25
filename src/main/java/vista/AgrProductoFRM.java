@@ -10,25 +10,42 @@ import modelo.Producto;
 import util.DataSource;
 
 public class AgrProductoFRM extends javax.swing.JFrame {
-    
-    //Controladores para acceder a sus metodos
-    cProducto controlador = new cProducto(DataSource.obtenerConexion());
 
-    cCategoria controlCategoria = new cCategoria(DataSource.obtenerConexion());
-
-    //Atributo donde se guardaran las categorias
+    private Producto producto;
+    private final cProducto controlador;
     private final List<Categoria> lstCategorias;
 
     public AgrProductoFRM() {
         initComponents();
-        setLocationRelativeTo(null);
-        
-        // Carga las categorías en el ComboBox.
-        lstCategorias = controlCategoria.obtenerTodasLasCategorias();
+        controlador = new cProducto(DataSource.obtenerConexion());
+        lstCategorias = cargarCategorias();
+    }
 
-        for (Categoria aux : lstCategorias) {
+    public AgrProductoFRM(Producto producto) {
+        initComponents();
+        controlador = new cProducto(DataSource.obtenerConexion());
+        lstCategorias = cargarCategorias();
+        this.producto = producto;
+        cargarDatosProducto();
+    }
+
+    private List<Categoria> cargarCategorias() {
+        cCategoria controlCategoria = new cCategoria(DataSource.obtenerConexion());
+        List<Categoria> categorias = controlCategoria.obtenerTodasLasCategorias();
+        for (Categoria aux : categorias) {
             String cat = aux.getIdCategoria() + "|" + aux.getNombreCategoria();
             this.cmbCategoria.addItem(cat);
+        }
+        return categorias;
+    }
+
+    private void cargarDatosProducto() {
+        if (producto != null) {
+            txtNombre.setText(producto.getNombre());
+            txtDescripcion.setText(producto.getDescripcion());
+            txtStock.setText(String.valueOf(producto.getCantidadStock()));
+            txtPrecio.setText(String.valueOf(producto.getPrecio()));
+            cmbCategoria.setSelectedItem(producto.getCategoria().getIdCategoria() + "|" + producto.getCategoria().getNombreCategoria());
         }
     }
 
@@ -191,42 +208,35 @@ public class AgrProductoFRM extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // Crear un nuevo objeto Producto
-        Producto producto = new Producto();
-
-        // Obtener los datos del formulario
+        if (producto == null) {
+            producto = new Producto();
+        }
         producto.setNombre(txtNombre.getText());
         producto.setDescripcion(txtDescripcion.getText());
         producto.setCantidadStock(Integer.parseInt(txtStock.getText()));
         producto.setPrecio(Double.parseDouble(txtPrecio.getText()));
-
-        // Obtener la categoría seleccionada del JComboBox
         String categoriaSeleccionada = (String) cmbCategoria.getSelectedItem();
-        // Separar el ID de la categoría y el nombre
         String[] partes = categoriaSeleccionada.split("\\|");
-        int idCategoria = Integer.parseInt(partes[0]); // Extraer el ID de la categoría
-
-        // Crear un nuevo objeto Categoria y establecerlo en el Producto
+        int idCategoria = Integer.parseInt(partes[0]);
         Categoria categoria = new Categoria();
         categoria.setIdCategoria(idCategoria);
-        categoria.setNombreCategoria(partes[1]); // Puedes setear el nombre si es necesario
-        producto.setCategoria(categoria); // Establecer la categoría en el producto
+        categoria.setNombreCategoria(partes[1]);
+        producto.setCategoria(categoria);
 
-        // Llamar al método para agregar el producto en el DAO
-        boolean resultado = controlador.registrarProducto(producto); // Asegúrate de tener un método para esto
+        boolean resultado;
+        if (producto.getIdProducto() == 0) {
+            resultado = controlador.registrarProducto(producto);
+        } else {
+            resultado = controlador.actualizarProducto(producto);
+        }
 
-        // Manejo de resultados
         if (resultado) {
             JOptionPane.showMessageDialog(this, "Producto guardado exitosamente.");
-            // Aquí puedes llamar a un método para limpiar los campos o actualizar la tabla
-            // Llama a este método para actualizar la tabla de productos
-            vistaFrm.llenarTabla();
+            new ListaProductosFRM().setVisible(true);
             this.dispose();
-            vistaFrm.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Error al guardar el producto.");
         }
-        
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

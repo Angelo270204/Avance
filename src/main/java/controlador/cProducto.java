@@ -54,4 +54,8 @@ public class cProducto {
             return 0;
         }
     }
+
+    public List<Producto> buscarProductosPorNombre(String nombre) {
+        return productoDao.buscarProductosPorNombre(nombre);
+    }
 }

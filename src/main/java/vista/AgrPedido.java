@@ -1,11 +1,47 @@
-
 package vista;
 
+import controlador.cProducto;
+import controlador.cProveedor;
+import controlador.cOrdenCompra;
+import dao.ProveedorDao;
+import modelo.Producto;
+import modelo.Proveedor;
+import modelo.OrdenCompra;
+import util.DataSource;
+
+import javax.swing.*;
+import java.util.List;
+
 public class AgrPedido extends javax.swing.JFrame {
+
+    private final cProducto controladorProducto;
+    private final cProveedor controladorProveedor;
+    private final cOrdenCompra controladorOrdenCompra;
+    private final List<Producto> lstProductos;
+    private final List<Proveedor> lstProveedores;
 
     public AgrPedido() {
         initComponents();
         setLocationRelativeTo(null);
+        controladorProducto = new cProducto(DataSource.obtenerConexion());
+        controladorProveedor = new cProveedor(new ProveedorDao(DataSource.obtenerConexion()));
+        controladorOrdenCompra = new cOrdenCompra();
+        lstProductos = controladorProducto.obtenerProductos();
+        lstProveedores = controladorProveedor.listarProveedores();
+        cargarProductos();
+        cargarProveedores();
+    }
+
+    private void cargarProductos() {
+        for (Producto producto : lstProductos) {
+            cmbProducto.addItem(producto);
+        }
+    }
+
+    private void cargarProveedores() {
+        for (Proveedor proveedor : lstProveedores) {
+            cmbProveedor.addItem(proveedor);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -18,10 +54,11 @@ public class AgrPedido extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        cmbProducto = new javax.swing.JComboBox<>();
+        cmbProveedor = new javax.swing.JComboBox<>();
+        txtCantidad = new javax.swing.JTextField();
+        txtPrecioCompra = new javax.swing.JTextField();
+        txtFechaCompra = new javax.swing.JTextField();
         btnAgregar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
@@ -51,10 +88,13 @@ public class AgrPedido extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         jLabel6.setText("Fecha de la compra:");
 
-        jTextField2.setEditable(false);
-
         btnAgregar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnCancelar.setText("Cancelar");
@@ -71,16 +111,12 @@ public class AgrPedido extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(147, 147, 147)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addGap(25, 25, 25)
-                        .addComponent(jTextField3))
+                        .addComponent(txtFechaCompra))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -90,9 +126,10 @@ public class AgrPedido extends javax.swing.JFrame {
                             .addComponent(jLabel5))
                         .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox2, 0, 156, Short.MAX_VALUE)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2))))
+                            .addComponent(cmbProveedor, 0, 156, Short.MAX_VALUE)
+                            .addComponent(txtCantidad)
+                            .addComponent(txtPrecioCompra)
+                            .addComponent(cmbProducto, 0, 156, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addGap(22, 22, 22))
@@ -102,6 +139,10 @@ public class AgrPedido extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(112, 112, 112))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,25 +151,27 @@ public class AgrPedido extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(cmbProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
+                        .addGap(42, 42, 42)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cmbProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPrecioCompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFechaCompra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
@@ -151,11 +194,31 @@ public class AgrPedido extends javax.swing.JFrame {
         vista.setVisible(true);
     }//GEN-LAST:event_formWindowClosing
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        OrdenCompra orden = new OrdenCompra();
+        orden.setProducto((Producto) cmbProducto.getSelectedItem());
+        orden.setProveedor((Proveedor) cmbProveedor.getSelectedItem());
+        orden.setCantidad(Integer.parseInt(txtCantidad.getText()));
+        orden.setPrecioCompra(Double.parseDouble(txtPrecioCompra.getText()));
+        orden.setFechaCompra(java.sql.Date.valueOf(txtFechaCompra.getText()));
+
+        boolean resultado = controladorOrdenCompra.registrarOrdenCompra(orden);
+
+        if (resultado) {
+            JOptionPane.showMessageDialog(this, "Pedido agregado exitosamente.");
+            ListaPedidosFrm vista = new ListaPedidosFrm();
+            this.dispose();
+            vista.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al agregar el pedido.");
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<Producto> cmbProducto;
+    private javax.swing.JComboBox<Proveedor> cmbProveedor;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -163,8 +226,8 @@ public class AgrPedido extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtFechaCompra;
+    private javax.swing.JTextField txtPrecioCompra;
     // End of variables declaration//GEN-END:variables
 }

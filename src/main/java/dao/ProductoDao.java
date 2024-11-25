@@ -121,13 +121,13 @@ public class ProductoDao {
 
     // Método para eliminar un producto por ID
     public boolean eliminar(int id) {
-        String sql = "DELETE FROM producto WHERE id_producto = ?"; // Consulta SQL para eliminar un producto
+        String sql = "DELETE FROM producto WHERE id_producto = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, id); // Asignar ID del producto a eliminar
-            return ps.executeUpdate() > 0; // Retorna true si se eliminó correctamente
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace(); // Manejo de excepción mejorado
-            return false; // Retornar false si ocurre un error
+            e.printStackTrace();
+            return false;
         }
     }
     
@@ -157,5 +157,29 @@ public class ProductoDao {
             }
         }
         return total; // Retornar total de productos bajo stock
+    }
+
+    public List<Producto> buscarProductosPorNombre(String nombre) {
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM producto WHERE nombre LIKE ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, "%" + nombre + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Producto producto = new Producto();
+                    producto.setIdProducto(rs.getInt("id_producto"));
+                    producto.setNombre(rs.getString("nombre"));
+                    producto.setDescripcion(rs.getString("descripcion"));
+                    producto.setCantidadStock(rs.getInt("cantidad_stock"));
+                    producto.setPrecio(rs.getDouble("precio"));
+                    // Asumiendo que tienes un método para obtener la categoría por ID
+                    // producto.setCategoria(obtenerCategoriaPorId(rs.getInt("id_categoria")));
+                    productos.add(producto);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return productos;
     }
 }

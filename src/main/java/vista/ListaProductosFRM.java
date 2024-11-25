@@ -1,31 +1,27 @@
 package vista;
 
 import controlador.cProducto;
-
-import java.sql.Connection;
-import java.util.List;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import modelo.Producto;
 import util.DataSource;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+
 public class ListaProductosFRM extends javax.swing.JFrame {
 
-    // Obtener la conexión a la base de datos
-    Connection conexion = DataSource.obtenerConexion();
-
-    cProducto controlador = new cProducto(conexion);
-
-    DefaultTableModel modelo;
+    private final cProducto controlador;
+    private DefaultTableModel modelo;
 
     public ListaProductosFRM() {
         initComponents();
         setLocationRelativeTo(null);
+        setSize(800, 600);
+        controlador = new cProducto(DataSource.obtenerConexion());
         modelo = (DefaultTableModel) tblProductos.getModel();
         llenarTabla();
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -56,6 +52,11 @@ public class ListaProductosFRM extends javax.swing.JFrame {
 
         btnBuscar.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         cmbProductos.setFont(new java.awt.Font("Gill Sans MT", 0, 14)); // NOI18N
         cmbProductos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Filtrar Por" }));
@@ -128,8 +129,8 @@ public class ListaProductosFRM extends javax.swing.JFrame {
                         .addGap(52, 52, 52)
                         .addComponent(jLabel4)
                         .addGap(17, 17, 17)
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(36, 36, 36)
                         .addComponent(cmbProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -141,7 +142,7 @@ public class ListaProductosFRM extends javax.swing.JFrame {
                         .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
                         .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,9 +169,10 @@ public class ListaProductosFRM extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-
-    }//GEN-LAST:event_btnEditarActionPerformed
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        MainFRM main = new MainFRM();
+        main.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         AgrProductoFRM agrProducto = new AgrProductoFRM();
@@ -178,44 +180,65 @@ public class ListaProductosFRM extends javax.swing.JFrame {
         agrProducto.setVisible(true);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        MainFRM main = new MainFRM();
-        main.setVisible(true);
-    }//GEN-LAST:event_formWindowClosing
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        String nombre = txtBuscar.getText();
+        List<Producto> productos = controlador.buscarProductosPorNombre(nombre);
+        modelo.setRowCount(0); // Limpiar la tabla
+        for (Producto producto : productos) {
+            modelo.addRow(new Object[]{
+                producto.getIdProducto(),
+                producto.getNombre(),
+                producto.getDescripcion(),
+                producto.getCantidadStock(),
+                producto.getPrecio()
+            });
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int selectedRow = tblProductos.getSelectedRow();
         if (selectedRow != -1) { // Verifica si hay una fila seleccionada
             int idProducto = (int) modelo.getValueAt(selectedRow, 0); // Asumiendo que el ID está en la primera columna
-            controlador.eliminarProducto(idProducto); // Elimina el producto de la base de datos
-            modelo.removeRow(selectedRow); // Elimina la fila de la tabla
-            JOptionPane.showMessageDialog(this, "Producto eliminado exitosamente.");
-
+            boolean resultado = controlador.eliminarProducto(idProducto); // Elimina el producto de la base de datos
+            if (resultado) {
+                modelo.removeRow(selectedRow); // Elimina la fila de la tabla
+                JOptionPane.showMessageDialog(this, "Producto eliminado exitosamente.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el producto.");
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminar.");
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {
+            int selectedRow = tblProductos.getSelectedRow();
+            if (selectedRow != -1) {
+                int idProducto = (int) modelo.getValueAt(selectedRow, 0);
+                Producto producto = controlador.obtenerProducto(idProducto); // Obtener el producto por ID
+                AgrProductoFRM editarProducto = new AgrProductoFRM(producto);
+                this.dispose();
+                editarProducto.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un producto para editar.");
+            }
+    }
+
     public void llenarTabla() {
         // Obtener la lista de productos del controlador
         List<Producto> productos = controlador.obtenerProductos();
-
-        // Limpiar las filas existentes en la tabla
-        modelo.setRowCount(0);
-
-        // Agregar los productos al modelo de la tabla
-        for (Producto p : productos) {
+        modelo.setRowCount(0); // Limpiar la tabla
+        for (Producto producto : productos) {
             modelo.addRow(new Object[]{
-                p.getIdProducto(),
-                p.getNombre(),
-                p.getCategoria().getNombreCategoria(), // Mostrar nombre de la categoría
-                p.getDescripcion(),
-                p.getCantidadStock(),
-                p.getPrecio()
+                producto.getIdProducto(),
+                producto.getNombre(),
+                producto.getCategoria().getNombreCategoria(), // Asegúrate de obtener el nombre de la categoría
+                producto.getDescripcion(), // Agregar la descripción del producto
+                producto.getCantidadStock(),
+                producto.getPrecio()
             });
         }
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

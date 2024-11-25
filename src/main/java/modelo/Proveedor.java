@@ -165,4 +165,9 @@ public class Proveedor {
     public void setPais(String pais) {
         this.pais = pais;
     }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
